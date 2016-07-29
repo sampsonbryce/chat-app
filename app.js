@@ -18,7 +18,7 @@ var app = express();
 app.set('views', __dirname + '/views');
 var hbs = exphbs.create({});
 
-app.engine('handlebars', hbs.engine);
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars')
 
 // uncomment after placing your favicon in /public
@@ -36,7 +36,16 @@ app.use('/users', users);
 
 //SOCKETS
 io.on('connection', function(socket){
-    console.log('user connected')
+    console.log('user connected');
+    socket.on('disconnect', function(){
+        console.log('client disconnected');
+    });
+
+    socket.on('chat:message', function(msg){
+        console.log('new message', msg);
+        io.emit('chat:message', msg);
+    });
+
 });
 
 

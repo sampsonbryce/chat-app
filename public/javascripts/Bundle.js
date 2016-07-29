@@ -21141,11 +21141,55 @@
 	
 	var Chat = _react2.default.createClass({
 	    displayName: 'Chat',
+	    getInitialState: function getInitialState() {
+	        return { messages: [] };
+	    },
+	    componentDidMount: function componentDidMount() {
+	        this.socket = io('localhost:8080');
+	        this.socket.on('chat:message', this.addMessage);
+	    },
+	    submit: function submit() {
+	        var input = $('#chat > div > input');
+	        if (input.val().length > 0) {
+	            this.socket.emit('chat:message', input.val());
+	            input.val('');
+	        }
+	    },
+	    addMessage: function addMessage(msg) {
+	        var cur_state = this.state;
+	        cur_state.messages.push(msg);
+	        this.setState(cur_state);
+	    },
+	    handleKeyPress: function handleKeyPress(event) {
+	        if (event.keyCode == 13) {
+	            this.submit();
+	        }
+	    },
 	    render: function render() {
 	        return _react2.default.createElement(
-	            'p',
-	            null,
-	            'CHATTING'
+	            'div',
+	            { id: 'chat', className: 'container' },
+	            _react2.default.createElement(
+	                'ul',
+	                { className: 'row' },
+	                this.state.messages.map(function (message, index) {
+	                    return _react2.default.createElement(
+	                        'li',
+	                        { key: index, className: 'message-item' },
+	                        message
+	                    );
+	                })
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement('input', { onKeyUp: this.handleKeyPress }),
+	                _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.submit, className: 'btn btn-primary' },
+	                    'Submit'
+	                )
+	            )
 	        );
 	    }
 	});

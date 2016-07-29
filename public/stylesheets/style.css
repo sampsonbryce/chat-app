@@ -6,3 +6,16 @@ body {
 a {
   color: #00B7FF;
 }
+#chat > ul{
+    list-style-type: none;
+    width: 100%;
+}
+
+#chat > div > input{
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+}
+
+#chat > div > button{
+    width: 100%;
+}
